@@ -1,0 +1,26 @@
+from xml import sax
+
+isTitle = 0
+titl = ''
+
+class SimpleHandler(sax.ContentHandler):
+    def startElement(self, name, attrs):
+        global isTitle
+        if name == 'title':
+            isTitle = 1
+        
+    def characters(self, content):
+        global isTitle
+        global titl
+        if isTitle == 1:
+            titl = content
+            isTitle = 0
+        if '{{en-noun|-|}}' in content or '{{en-noun|s|-}}' in content or '{{en-noun|es|-}}' in content:
+            print titl 
+
+parser = sax.make_parser()
+
+handler = SimpleHandler()
+parser.setContentHandler( handler )
+
+parser.parse( 'e:\enwiktionary-20120812-pages-meta-current.xml' )
